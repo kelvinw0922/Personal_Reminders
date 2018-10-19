@@ -1,6 +1,8 @@
 const express = require(`express`);
 const exphbs = require(`express-handlebars`);
 const methodOverride = require("method-override");
+const flash = require("connect-flash");
+const session = require("express-session");
 const bodyParser = require(`body-parser`);
 const mongoose = require(`mongoose`);
 
@@ -32,6 +34,28 @@ app.use(bodyParser.json());
 
 // Method Override Middleware
 app.use(methodOverride("_method"));
+
+// Express-Session Middleware
+app.use(
+  session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true
+  })
+);
+
+// Flash Middleware
+app.use(flash());
+
+// Global Variables
+app.use(function(req, res, next) {
+  res.locals.success_message = req.flash("success_message");
+  res.locals.error_message = req.flash("error_message");
+  res.locals.error = req.flash("error");
+
+  // Call the next middleware
+  next();
+});
 
 // Index Route
 app.get("/", (req, res) => {
@@ -98,6 +122,7 @@ app.post("/reminders", (req, res) => {
       details: req.body.details
     };
     new Reminder(newUser).save().then(reminder => {
+      req.flash("success_message", "Reminder is added");
       res.redirect("/reminders");
     });
   }
@@ -113,6 +138,7 @@ app.put("/reminders/:id", (req, res) => {
     reminder.details = req.body.details;
     // save the updated reminder
     reminder.save().then(() => {
+      req.flash("success_message", "Reminder is updated");
       res.redirect("/reminders");
     });
   });
@@ -123,7 +149,10 @@ app.delete("/reminders/:id", (req, res) => {
   //res.send("DELETE");
   Reminder.deleteOne({
     _id: req.params.id
-  }).then(() => res.redirect("/reminders"));
+  }).then(() => {
+    req.flash("success_message", "Reminder is removed");
+    res.redirect("/reminders");
+  });
   // Also works
   /*
   Reminder.remove({
