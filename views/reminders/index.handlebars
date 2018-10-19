@@ -2,7 +2,11 @@
 <div class="card card-body mb-2">
     <h4>{{event_title}}</h4>
     <p>{{details}}</p>
-    <a href="/reminders/edit/{{id}}" class="btn btn-dark btn-block">Edit</a>
+    <a href="/reminders/edit/{{id}}" class="btn btn-dark btn-block mb-2">Edit</a>
+    <form action="/reminders/{{id}}?_method=DELETE" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="submit" value="Delete" class="btn btn-danger btn-block">
+    </form>
 </div>
 {{else}}
 <p>No Reminders Recently</p>
