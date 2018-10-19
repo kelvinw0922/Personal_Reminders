@@ -43,9 +43,31 @@ app.get("/about", (req, res) => {
   res.render("about");
 });
 
+// Reminder Index Page
+app.get("/reminders", (req, res) => {
+  Reminder.find({})
+    .sort({ date: "desc" })
+    .then(reminders => {
+      res.render("reminders/index", {
+        reminders: reminders
+      });
+    });
+});
+
 // Add Reminder Form
 app.get("/reminders/add", (req, res) => {
   res.render("reminders/add");
+});
+
+// Edit Reminder Form
+app.get("/reminders/edit/:id", (req, res) => {
+  Reminder.findOne({
+    _id: req.params.id
+  }).then(reminder => {
+    res.render("reminders/edit", {
+      reminder: reminder
+    });
+  });
 });
 
 // Process Reminders' Form
