@@ -73,7 +73,7 @@ app.get("/about", (req, res) => {
 // Reminder Index Page
 app.get("/reminders", (req, res) => {
   Reminder.find({})
-    .sort({ date: "desc" })
+    .sort({ createDate: "desc" })
     .then(reminders => {
       res.render("reminders/index", {
         reminders: reminders
@@ -106,6 +106,9 @@ app.post("/reminders", (req, res) => {
   if (!req.body.title) {
     errors.push({ text: "Please add a title" });
   }
+  if (!req.body.date) {
+    errors.push({ text: "Please add the event date" });
+  }
   if (!req.body.details) {
     errors.push({ text: "Please add details" });
   }
@@ -114,11 +117,13 @@ app.post("/reminders", (req, res) => {
     res.render("/reminders/add", {
       errors: errors,
       title: req.body.title,
+      date: req.body.date,
       details: req.body.details
     });
   } else {
     const newUser = {
       event_title: req.body.title,
+      date: req.body.date,
       details: req.body.details
     };
     new Reminder(newUser).save().then(reminder => {
@@ -135,6 +140,7 @@ app.put("/reminders/:id", (req, res) => {
   }).then(reminder => {
     // update new values
     reminder.event_title = req.body.title;
+    reminder.date = req.body.date;
     reminder.details = req.body.details;
     // save the updated reminder
     reminder.save().then(() => {

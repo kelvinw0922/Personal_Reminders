@@ -7,11 +7,15 @@ const ReminderSchema = new Schema({
     type: String,
     required: true
   },
+  date: {
+    type: String,
+    required: true
+  },
   details: {
     type: String,
     required: true
   },
-  date: {
+  createDate: {
     type: Date,
     default: Date.now
   }

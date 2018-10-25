@@ -1,6 +1,7 @@
 {{#each reminders}}
 <div class="card card-body mb-2">
     <h4>{{event_title}}</h4>
+    <p><strong>Date: </strong>{{date}}</p>
     <p>{{details}}</p>
     <a href="/reminders/edit/{{id}}" class="btn btn-dark btn-block mb-2">Edit</a>
     <form action="/reminders/{{id}}?_method=DELETE" method="post">

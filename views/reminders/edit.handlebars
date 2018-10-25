@@ -10,6 +10,17 @@
             <label for="title">Title</label>
             <input type="text" name="title" class="form-control" value="{{reminder.event_title}}" required>
         </div>
+        <div class="form-group ">
+            <label class="control-label " for="date">
+                Date
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="far fa-calendar-alt fa-2x mr-2"></i>
+                </div>
+                <input class="form-control" id="date" name="date" placeholder="{{reminder.date}}" type="text" />
+            </div>
+        </div>
         <div class="form-group">
             <label for="details">Details</label>
             <textarea rows="8" type="text" name="details" class="form-control" required>{{reminder.details}}</textarea>
