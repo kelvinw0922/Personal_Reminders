@@ -11,6 +11,10 @@ const ReminderSchema = new Schema({
     type: String,
     required: true
   },
+  realDate: {
+    type: Date,
+    required: true
+  },
   details: {
     type: String,
     required: true

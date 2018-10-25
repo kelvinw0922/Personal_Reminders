@@ -8,6 +8,10 @@ const mongoose = require(`mongoose`);
 
 const app = express();
 
+// Load routes
+const reminders = require("./routes/reminders");
+const users = require("./routes/users");
+
 // Map global promise
 mongoose.Promise = global.Promise;
 // Connect to mongoose
@@ -18,10 +22,6 @@ mongoose
   )
   .then(() => console.log("MongoDB Connected..."))
   .catch(err => console.log(err));
-
-// Load Reminders Model
-require("./models/Reminders");
-const Reminder = mongoose.model("reminders");
 
 // Handlebars Middleware
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -70,102 +70,9 @@ app.get("/about", (req, res) => {
   res.render("about");
 });
 
-// Reminder Index Page
-app.get("/reminders", (req, res) => {
-  Reminder.find({})
-    .sort({ createDate: "desc" })
-    .then(reminders => {
-      res.render("reminders/index", {
-        reminders: reminders
-      });
-    });
-});
-
-// Add Reminder Form
-app.get("/reminders/add", (req, res) => {
-  res.render("reminders/add");
-});
-
-// Edit Reminder Form
-app.get("/reminders/edit/:id", (req, res) => {
-  Reminder.findOne({
-    _id: req.params.id
-  }).then(reminder => {
-    res.render("reminders/edit", {
-      reminder: reminder
-    });
-  });
-});
-
-// Process Reminders' Form
-app.post("/reminders", (req, res) => {
-  // console.log(req.body);
-  // res.send("ok");
-  let errors = [];
-
-  if (!req.body.title) {
-    errors.push({ text: "Please add a title" });
-  }
-  if (!req.body.date) {
-    errors.push({ text: "Please add the event date" });
-  }
-  if (!req.body.details) {
-    errors.push({ text: "Please add details" });
-  }
-
-  if (errors.length > 0) {
-    res.render("/reminders/add", {
-      errors: errors,
-      title: req.body.title,
-      date: req.body.date,
-      details: req.body.details
-    });
-  } else {
-    const newUser = {
-      event_title: req.body.title,
-      date: req.body.date,
-      details: req.body.details
-    };
-    new Reminder(newUser).save().then(reminder => {
-      req.flash("success_message", "Reminder is added");
-      res.redirect("/reminders");
-    });
-  }
-});
-
-// Edit Reminders' Form
-app.put("/reminders/:id", (req, res) => {
-  Reminder.findOne({
-    _id: req.params.id
-  }).then(reminder => {
-    // update new values
-    reminder.event_title = req.body.title;
-    reminder.date = req.body.date;
-    reminder.details = req.body.details;
-    // save the updated reminder
-    reminder.save().then(() => {
-      req.flash("success_message", "Reminder is updated");
-      res.redirect("/reminders");
-    });
-  });
-});
-
-// Delete Reminder
-app.delete("/reminders/:id", (req, res) => {
-  //res.send("DELETE");
-  Reminder.deleteOne({
-    _id: req.params.id
-  }).then(() => {
-    req.flash("success_message", "Reminder is removed");
-    res.redirect("/reminders");
-  });
-  // Also works
-  /*
-  Reminder.remove({
-    _id: req.params.id
-  }).then(() => res.redirect("/reminders"));
-  */
-});
+// Use Routes
+app.use("/reminders", reminders);
+app.use("/users", users);
 
 // Setting port number to 5000
 const port = 5000;
