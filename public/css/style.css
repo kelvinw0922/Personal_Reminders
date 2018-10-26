@@ -1,0 +1,11 @@
+.logo {
+  width: 150px;
+  margin: auto;
+}
+
+body {
+  background-image: url("/img/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}

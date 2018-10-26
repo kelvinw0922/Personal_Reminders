@@ -5,7 +5,7 @@ const mongoose = require(`mongoose`);
 // Since this router is dedicated for /reminders/..., so take out the reminders to make it /... instead;
 
 // Load Reminders Model
-require("../models/Reminders");
+require("../models/Reminder");
 const Reminder = mongoose.model("reminders");
 
 // Reminder Index Page
