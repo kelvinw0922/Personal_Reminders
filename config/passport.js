@@ -8,7 +8,24 @@ const User = mongoose.model("users");
 module.exports = function(passport) {
   passport.use(
     new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      console.log(password);
+      User.findOne({
+        email: email
+      }).then(user => {
+        if (!user) {
+          // No Account is Found
+          return done(null, false, { message: "No User Found" });
+        }
+
+        // Matched Password
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+          if (err) throw err;
+          if (isMatch) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Password is incorrect" });
+          }
+        });
+      });
     })
   );
 };
