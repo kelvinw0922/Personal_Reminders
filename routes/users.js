@@ -13,8 +13,16 @@ router.get("/login", (req, res) => {
   res.render("users/login");
 });
 
+// User Register Route
 router.get("/register", (req, res) => {
   res.render("users/register");
+});
+
+// User Logout Route
+router.get("/logout", (req, res) => {
+  req.logout();
+  req.flash("success_message", "You are logged out");
+  res.redirect("/users/login");
 });
 
 // Login Form POST

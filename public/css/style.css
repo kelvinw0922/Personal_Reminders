@@ -9,3 +9,8 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+.no_reminders {
+  font-size: 2rem;
+  font-weight: 500;
+}
