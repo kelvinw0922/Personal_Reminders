@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require(`mongoose`);
+const { ensureAuthenticated } = require("../helpers/auth");
 
 // Since this router is dedicated for /reminders/..., so take out the reminders to make it /... instead;
 
@@ -9,8 +10,8 @@ require("../models/Reminder");
 const Reminder = mongoose.model("reminders");
 
 // Reminder Index Page
-router.get("/", (req, res) => {
-  Reminder.find({})
+router.get("/", ensureAuthenticated, (req, res) => {
+  Reminder.find({ user: req.user.id })
     .sort({ realDate: "desc" })
     .then(reminders => {
       res.render("reminders/index", {
@@ -20,12 +21,12 @@ router.get("/", (req, res) => {
 });
 
 // Add Reminder Form
-router.get("/add", (req, res) => {
+router.get("/add", ensureAuthenticated, (req, res) => {
   res.render("reminders/add");
 });
 
 // Edit Reminder Form
-router.get("/edit/:id", (req, res) => {
+router.get("/edit/:id", ensureAuthenticated, (req, res) => {
   Reminder.findOne({
     _id: req.params.id
   }).then(reminder => {
@@ -36,7 +37,7 @@ router.get("/edit/:id", (req, res) => {
 });
 
 // Process Reminders' Form
-router.post("/", (req, res) => {
+router.post("/", ensureAuthenticated, (req, res) => {
   // console.log(req.body);
   // res.send("ok");
   let errors = [];
@@ -64,7 +65,8 @@ router.post("/", (req, res) => {
       event_title: req.body.title,
       date: req.body.date,
       realDate: realDate,
-      details: req.body.details
+      details: req.body.details,
+      user: req.user.id
     };
     new Reminder(newUser).save().then(reminder => {
       req.flash("success_message", "Reminder is added");
@@ -74,7 +76,7 @@ router.post("/", (req, res) => {
 });
 
 // Edit Reminders' Form
-router.put("/:id", (req, res) => {
+router.put("/:id", ensureAuthenticated, (req, res) => {
   Reminder.findOne({
     _id: req.params.id
   }).then(reminder => {
@@ -92,7 +94,7 @@ router.put("/:id", (req, res) => {
 });
 
 // Delete Reminder
-router.delete("/:id", (req, res) => {
+router.delete("/:id", ensureAuthenticated, (req, res) => {
   //res.send("DELETE");
   Reminder.deleteOne({
     _id: req.params.id

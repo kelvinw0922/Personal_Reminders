@@ -22,6 +22,10 @@ const ReminderSchema = new Schema({
   createDate: {
     type: Date,
     default: Date.now
+  },
+  user: {
+    type: String,
+    required: true
   }
 });
 

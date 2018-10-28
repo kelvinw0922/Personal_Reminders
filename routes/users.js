@@ -28,7 +28,7 @@ router.get("/logout", (req, res) => {
 // Login Form POST
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", {
-    successRedirect: "/reminders",
+    successRedirect: "/",
     failureRedirect: "/users/login",
     failureFlash: true
   })(req, res, next);
