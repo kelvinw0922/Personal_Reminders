@@ -30,9 +30,15 @@ router.get("/edit/:id", ensureAuthenticated, (req, res) => {
   Reminder.findOne({
     _id: req.params.id
   }).then(reminder => {
-    res.render("reminders/edit", {
-      reminder: reminder
-    });
+    // Check if the user is corresponding to the reminder
+    if (reminder.user != req.user.id) {
+      req.flash("error_message", "Action is not authorized");
+      res.redirect("/reminders");
+    } else {
+      res.render("reminders/edit", {
+        reminder: reminder
+      });
+    }
   });
 });
 

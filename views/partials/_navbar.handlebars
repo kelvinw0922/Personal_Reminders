@@ -15,6 +15,9 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 {{#if user}}
+                <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="fas fa-user"></i> : {{user.email}}</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbarDropdownMenuLink">New
                         Event</a>
