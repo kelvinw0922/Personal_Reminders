@@ -19,10 +19,32 @@ require("./config/passport")(passport);
 
 // Map global promise
 mongoose.Promise = global.Promise;
-// Connect to mongoose
+
+// Database Config
+const database = require("./config/database");
+
+// Connect to mongoose (Local Server)
+// mongoose
+//   .connect(
+//     "mongodb://localhost/reminder-app",
+//     { useNewUrlParser: true }
+//   )
+//   .then(() => console.log("MongoDB Connected..."))
+//   .catch(err => console.log(err));
+
+// Coonect to mongoose (Deployment)
+// mongoose
+//   .connect(
+//     "mongodb://rozanate:tracymacno1@ds243963.mlab.com:43963/online-reminder",
+//     { useNewUrlParser: true }
+//   )
+//   .then(() => console.log("MongoDB Connected..."))
+//   .catch(err => console.log(err));
+
+// Connect to mongoose (Dynamically)
 mongoose
   .connect(
-    "mongodb://localhost/reminder-app",
+    database.mongoURI,
     { useNewUrlParser: true }
   )
   .then(() => console.log("MongoDB Connected..."))
@@ -72,7 +94,7 @@ app.use(function(req, res, next) {
 
 // Index Route
 app.get("/", (req, res) => {
-  const title = "Welcome Nigger";
+  const title = "Welcome";
   res.render("index", {
     title: title
   });
@@ -87,8 +109,11 @@ app.get("/about", (req, res) => {
 app.use("/reminders", reminders);
 app.use("/users", users);
 
-// Setting port number to 5000
-const port = 5000;
+// Setting port number to 5000 - (Local Server)
+// const port = 5000;
+
+// Port Number for deploying to heroku
+const port = process.env.PORT || 5000;
 
 // Tell Server to listen to localhost:5000
 app.listen(port, () => {
